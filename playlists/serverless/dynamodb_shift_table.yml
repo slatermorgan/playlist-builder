@@ -1,5 +1,5 @@
 Resources:
-  ShiftsTable:
+  PlaylistsTable:
     Type: 'AWS::DynamoDB::Table'
     DeletionPolicy: Retain
     Properties:
@@ -14,8 +14,8 @@ Resources:
       ProvisionedThroughput:
         ReadCapacityUnits: 1
         WriteCapacityUnits: 1
-      TableName: 'example-shifts'
-  IntegrationShiftsTable:
+      TableName: 'example-playlists'
+  IntegrationPlaylistsTable:
     Type: 'AWS::DynamoDB::Table'
     DeletionPolicy: Retain
     Properties:
@@ -28,4 +28,4 @@ Resources:
       ProvisionedThroughput:
         ReadCapacityUnits: 1
         WriteCapacityUnits: 1
-      TableName: 'example-shifts-integration'
+      TableName: 'example-playlists-integration'

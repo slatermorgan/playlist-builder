@@ -1,8 +1,8 @@
 {
-  "name": "go-care",
+  "name": "playlist-builder",
   "version": "1.0.0",
   "main": "index.js",
-  "repository": "git@github.com/slatermorgan/go-care.git",
+  "repository": "git@github.com/slatermorgan/playlist-builder.git",
   "author": "slatermorgan",
   "license": "MIT",
   "dependencies": {

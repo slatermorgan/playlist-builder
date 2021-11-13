@@ -1,7 +1,7 @@
 package playlists
 
-// Shift -
-type Shift struct {
+// Playlist -
+type Playlist struct {
 	ID         string `json:"id"`
 	TimeStart  int    `json:"timeStart" validate:"required,numeric"`
 	TimeEnd    int    `json:"timeEnd" validate:"required,numeric"`
@@ -9,8 +9,8 @@ type Shift struct {
 	AssignedTo string `json:"assignedTo"`
 }
 
-// UpdateShift -
-type UpdateShift struct {
+// UpdatePlaylist -
+type UpdatePlaylist struct {
 	TimeStart  int    `json:"timeStart" validate:"required,numeric"`
 	TimeEnd    int    `json:"timeEnd" validate:"required,numeric"`
 	ClientID   string `json:"clientID" validate:"required"`

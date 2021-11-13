@@ -2,8 +2,7 @@
 
 build:
 	export GO111MODULE=on
-	env GOOS=linux go build -ldflags="-s -w" -o bin/shifts shifts/deliveries/lambda/main.go
-	env GOOS=linux go build -ldflags="-s -w" -o bin/profile profile/deliveries/lambda/main.go
+	env GOOS=linux go build -ldflags="-s -w" -o bin/playlists playlists/deliveries/lambda/main.go
 
 clean:
 	rm -rf ./bin ./vendor
@@ -17,4 +16,4 @@ gomodgen:
 offline:
 	sls offline start --useDocker --printOutput
 local:
-	CMDPORT=8005 TABLE_NAME=example-shifts go run cmd/server/main.go
+	CMDPORT=8005 TABLE_NAME=example-playlists go run cmd/server/main.go

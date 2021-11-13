@@ -3,7 +3,7 @@
 See write up here: // Needs including
 
 ## Architecture
-This repo loosely follows Uncle Bob's clean architecture. The repo itself groups functionality related to a specific domain into its own package. In this case /shifts.
+This repo loosely follows Uncle Bob's clean architecture. The repo itself groups functionality related to a specific domain into its own package. In this case /playlists.
 
 The delivery layers include http, so you can run this repo as a standard web server. Or as a Lambda router.
 

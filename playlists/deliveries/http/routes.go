@@ -3,19 +3,19 @@ package http
 import (
 	"context"
 	"encoding/json"
-	"go-care/shifts"
 	"log"
 	"net/http"
+	"playlist-builder/playlists"
 	"time"
 
 	"github.com/gorilla/mux"
-	"github.com/slatermorgan/go-care/playlists"
+	"github.com/slatermorgan/playlist-builder/playlists"
 )
 
 const fiveSecondsTimeout = time.Second * 5
 
 type delivery struct {
-	usecase playlists.ShiftService
+	usecase playlists.PlaylistService
 }
 
 func writeErr(w http.ResponseWriter, err error) {
@@ -30,13 +30,13 @@ func (d *delivery) Get(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]
 
-	shift, err := d.usecase.Get(ctx, id)
+	playlist, err := d.usecase.Get(ctx, id)
 	if err != nil {
 		writeErr(w, err)
 		return
 	}
 
-	data, err := json.Marshal(shift)
+	data, err := json.Marshal(playlist)
 	if err != nil {
 		writeErr(w, err)
 		return
@@ -50,13 +50,13 @@ func (d *delivery) GetAll(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), fiveSecondsTimeout)
 	defer cancel()
 
-	shifts, err := d.usecase.GetAll(ctx)
+	playlists, err := d.usecase.GetAll(ctx)
 	if err != nil {
 		writeErr(w, err)
 		return
 	}
 
-	data, err := json.Marshal(shifts)
+	data, err := json.Marshal(playlists)
 	if err != nil {
 		writeErr(w, err)
 		return
@@ -71,8 +71,8 @@ func (d *delivery) Update(w http.ResponseWriter, r *http.Request) {
 	defer cancel()
 
 	decoder := json.NewDecoder(r.Body)
-	shift := &shifts.UpdateShift{}
-	if err := decoder.Decode(&shift); err != nil {
+	playlist := &playlists.UpdatePlaylist{}
+	if err := decoder.Decode(&playlist); err != nil {
 		writeErr(w, err)
 		return
 	}
@@ -80,7 +80,7 @@ func (d *delivery) Update(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]
 
-	if err := d.usecase.Update(ctx, id, shift); err != nil {
+	if err := d.usecase.Update(ctx, id, playlist); err != nil {
 		writeErr(w, err)
 		return
 	}
@@ -91,13 +91,13 @@ func (d *delivery) Create(w http.ResponseWriter, r *http.Request) {
 	defer cancel()
 
 	decoder := json.NewDecoder(r.Body)
-	shift := &shifts.Shift{}
-	if err := decoder.Decode(&shift); err != nil {
+	playlist := &playlists.Playlist{}
+	if err := decoder.Decode(&playlist); err != nil {
 		writeErr(w, err)
 		return
 	}
 
-	if err := d.usecase.Create(ctx, shift); err != nil {
+	if err := d.usecase.Create(ctx, playlist); err != nil {
 		writeErr(w, err)
 		return
 	}
@@ -124,7 +124,7 @@ func (d *delivery) Delete(w http.ResponseWriter, r *http.Request) {
 
 // Routes -
 func Routes() (*mux.Router, error) {
-	usecase, err := shifts.Init(true)
+	usecase, err := playlists.Init(true)
 	if err != nil {
 		log.Panic(err)
 	}
@@ -132,11 +132,11 @@ func Routes() (*mux.Router, error) {
 	delivery := &delivery{usecase}
 
 	r := mux.NewRouter()
-	r.HandleFunc("/shifts", delivery.Create).Methods("POST")
-	r.HandleFunc("/shifts", delivery.GetAll).Methods("GET")
-	r.HandleFunc("/shifts/{id}", delivery.Get).Methods("GET")
-	r.HandleFunc("/shifts/{id}", delivery.Update).Methods("PUT")
-	r.HandleFunc("/shifts/{id}", delivery.Delete).Methods("DELETE")
+	r.HandleFunc("/playlists", delivery.Create).Methods("POST")
+	r.HandleFunc("/playlists", delivery.GetAll).Methods("GET")
+	r.HandleFunc("/playlists/{id}", delivery.Get).Methods("GET")
+	r.HandleFunc("/playlists/{id}", delivery.Update).Methods("PUT")
+	r.HandleFunc("/playlists/{id}", delivery.Delete).Methods("DELETE")
 
 	return r, nil
 }

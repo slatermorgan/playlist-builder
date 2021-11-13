@@ -13,71 +13,71 @@ var (
 )
 
 type repository interface {
-	Get(ctx context.Context, id string) (*Shift, error)
-	GetAll(ctx context.Context) ([]*Shift, error)
-	Update(ctx context.Context, id string, shift *UpdateShift) error
-	Create(ctx context.Context, shift *Shift) error
+	Get(ctx context.Context, id string) (*Playlist, error)
+	GetAll(ctx context.Context) ([]*Playlist, error)
+	Update(ctx context.Context, id string, playlist *UpdatePlaylist) error
+	Create(ctx context.Context, playlist *Playlist) error
 	Delete(ctx context.Context, id string) error
 }
 
-// Usecase for interacting with shifts
+// Usecase for interacting with playlists
 type Usecase struct {
 	Repository repository
 }
 
-// Get a single shift
-func (u *Usecase) Get(ctx context.Context, id string) (*Shift, error) {
-	shift, err := u.Repository.Get(ctx, id)
+// Get a single playlist
+func (u *Usecase) Get(ctx context.Context, id string) (*Playlist, error) {
+	playlist, err := u.Repository.Get(ctx, id)
 	if err != nil {
-		return nil, errors.Wrap(err, "error fetching a single shift")
+		return nil, errors.Wrap(err, "error fetching a single playlist")
 	}
-	return shift, nil
+	return playlist, nil
 }
 
-// GetAll gets all shifts
-func (u *Usecase) GetAll(ctx context.Context) ([]*Shift, error) {
-	shifts, err := u.Repository.GetAll(ctx)
+// GetAll gets all playlists
+func (u *Usecase) GetAll(ctx context.Context) ([]*Playlist, error) {
+	playlists, err := u.Repository.GetAll(ctx)
 	if err != nil {
-		return nil, errors.Wrap(err, "error fetching all shifts")
+		return nil, errors.Wrap(err, "error fetching all playlists")
 	}
-	return shifts, nil
+	return playlists, nil
 }
 
-// Update a single shift
-func (u *Usecase) Update(ctx context.Context, id string, shift *UpdateShift) error {
+// Update a single playlist
+func (u *Usecase) Update(ctx context.Context, id string, playlist *UpdatePlaylist) error {
 	validate = validator.New()
-	if err := validate.Struct(shift); err != nil {
+	if err := validate.Struct(playlist); err != nil {
 		validationErrors := err.(validator.ValidationErrors)
 		return validationErrors
 	}
 
-	if err := u.Repository.Update(ctx, id, shift); err != nil {
-		return errors.Wrap(err, "error updating shift")
+	if err := u.Repository.Update(ctx, id, playlist); err != nil {
+		return errors.Wrap(err, "error updating playlist")
 	}
 	return nil
 }
 
-// Create a single shift
-func (u *Usecase) Create(ctx context.Context, shift *Shift) error {
+// Create a single playlist
+func (u *Usecase) Create(ctx context.Context, playlist *Playlist) error {
 	validate = validator.New()
-	if err := validate.Struct(*shift); err != nil {
+	if err := validate.Struct(*playlist); err != nil {
 		validationErrors := err.(validator.ValidationErrors)
 		// Here we should create custom returns
 		return validationErrors
 	}
 
-	shift.ID = u.newID()
-	if err := u.Repository.Create(ctx, shift); err != nil {
-		return errors.Wrap(err, "error creating new shift")
+	playlist.ID = u.newID()
+	if err := u.Repository.Create(ctx, playlist); err != nil {
+		return errors.Wrap(err, "error creating new playlist")
 	}
 
 	return nil
 }
 
-// Delete a single shift
+// Delete a single playlist
 func (u *Usecase) Delete(ctx context.Context, id string) error {
 	if err := u.Repository.Delete(ctx, id); err != nil {
-		return errors.Wrap(err, "error deleting shift")
+		return errors.Wrap(err, "error deleting playlist")
 	}
 	return nil
 }

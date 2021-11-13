@@ -1,4 +1,4 @@
-service: go-care
+service: playlist-builder
 
 frameworkVersion: '2'
 
@@ -29,17 +29,17 @@ package:
     - ./bin/**
 
 functions:
-  shifts:
-    handler: bin/shifts
+  playlists:
+    handler: bin/playlists
     environment:
-      TABLE_NAME: "example-shifts"
+      TABLE_NAME: "example-playlists"
     events:
       - http:
-          path: /shifts
+          path: /playlists
           method: ANY
           cors: true
       - http:
-          path: /shifts/{id}
+          path: /playlists/{id}
           method: ANY
           cors: true
   profile:
@@ -57,7 +57,7 @@ functions:
           cors: true
 # Cloudformation for databases
 resources:
-  - ${file(./shifts/serverless/dynamodb_shift_table.yml)}
+  - ${file(./playlists/serverless/dynamodb_playlist_table.yml)}
   - ${file(./profile/serverless/dynamodb_profile_table.yml)}
 plugins:
   - serverless-offline

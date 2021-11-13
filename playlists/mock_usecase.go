@@ -34,10 +34,10 @@ func (m *Mockrepository) EXPECT() *MockrepositoryMockRecorder {
 }
 
 // Get mocks base method
-func (m *Mockrepository) Get(ctx context.Context, id string) (*Shift, error) {
+func (m *Mockrepository) Get(ctx context.Context, id string) (*Playlist, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Get", ctx, id)
-	ret0, _ := ret[0].(*Shift)
+	ret0, _ := ret[0].(*Playlist)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -49,10 +49,10 @@ func (mr *MockrepositoryMockRecorder) Get(ctx, id interface{}) *gomock.Call {
 }
 
 // GetAll mocks base method
-func (m *Mockrepository) GetAll(ctx context.Context) ([]*Shift, error) {
+func (m *Mockrepository) GetAll(ctx context.Context) ([]*Playlist, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetAll", ctx)
-	ret0, _ := ret[0].([]*Shift)
+	ret0, _ := ret[0].([]*Playlist)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -64,31 +64,31 @@ func (mr *MockrepositoryMockRecorder) GetAll(ctx interface{}) *gomock.Call {
 }
 
 // Update mocks base method
-func (m *Mockrepository) Update(ctx context.Context, id string, shift *UpdateShift) error {
+func (m *Mockrepository) Update(ctx context.Context, id string, playlist *UpdatePlaylist) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Update", ctx, id, shift)
+	ret := m.ctrl.Call(m, "Update", ctx, id, playlist)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // Update indicates an expected call of Update
-func (mr *MockrepositoryMockRecorder) Update(ctx, id, shift interface{}) *gomock.Call {
+func (mr *MockrepositoryMockRecorder) Update(ctx, id, playlist interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*Mockrepository)(nil).Update), ctx, id, shift)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*Mockrepository)(nil).Update), ctx, id, playlist)
 }
 
 // Create mocks base method
-func (m *Mockrepository) Create(ctx context.Context, shift *Shift) error {
+func (m *Mockrepository) Create(ctx context.Context, playlist *Playlist) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Create", ctx, shift)
+	ret := m.ctrl.Call(m, "Create", ctx, playlist)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // Create indicates an expected call of Create
-func (mr *MockrepositoryMockRecorder) Create(ctx, shift interface{}) *gomock.Call {
+func (mr *MockrepositoryMockRecorder) Create(ctx, playlist interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*Mockrepository)(nil).Create), ctx, shift)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*Mockrepository)(nil).Create), ctx, playlist)
 }
 
 // Delete mocks base method

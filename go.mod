@@ -1,4 +1,4 @@
-module github.com/slatermorgan/go-care
+module github.com/slatermorgan/playlist-builder
 
 go 1.16
 

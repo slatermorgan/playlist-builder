@@ -8,20 +8,20 @@ import (
 	"os"
 	"testing"
 
-	"github.com/slatermorgan/go-care/pkg/helpers"
-	"github.com/slatermorgan/go-care/shifts"
+	"github.com/slatermorgan/playlist-builder/pkg/helpers"
+	"github.com/slatermorgan/playlist-builder/playlists"
 	"github.com/stretchr/testify/assert"
 )
 
 var (
-	id           = ""
-	validShift   = `{ "name": "Test Shift", "email": "test@test.com", "age": 30 }`
-	updatedShift = `{ "name": "Updated Shift", "email": "test@test.com", "age": 30 }`
+	id              = ""
+	validPlaylist   = `{ "name": "Test Playlist", "email": "test@test.com", "age": 30 }`
+	updatedPlaylist = `{ "name": "Updated Playlist", "email": "test@test.com", "age": 30 }`
 )
 
 func setup() *handler {
-	os.Setenv("TABLE_NAME", "example-shifts-integration")
-	usecase, err := shifts.Init(true)
+	os.Setenv("TABLE_NAME", "example-playlists-integration")
+	usecase, err := playlists.Init(true)
 	if err != nil {
 		log.Panic(err)
 	}
@@ -31,41 +31,41 @@ func setup() *handler {
 }
 
 func clear() {
-	os.Setenv("TABLE_NAME", "example-shifts-integration")
-	usecase, err := shifts.Init(true)
+	os.Setenv("TABLE_NAME", "example-playlists-integration")
+	usecase, err := playlists.Init(true)
 	if err != nil {
 		log.Panic(err)
 	}
 
 	ctx := context.Background()
-	shifts, _ := usecase.GetAll(ctx)
-	for _, shift := range shifts {
-		go usecase.Delete(ctx, shift.ID)
+	playlists, _ := usecase.GetAll(ctx)
+	for _, playlist := range playlists {
+		go usecase.Delete(ctx, playlist.ID)
 	}
 }
 
 func TestCanCreate(t *testing.T) {
 	ctx := context.Background()
-	shift := &shifts.Shift{}
+	playlist := &playlists.Playlist{}
 	clear()
 	h := setup()
 	req := helpers.Request{
 		HTTPMethod: "POST",
-		Body:       validShift,
+		Body:       validPlaylist,
 	}
 	res, err := helpers.Router(h)(ctx, req)
 	assert.NoError(t, err)
 
-	err = json.Unmarshal([]byte(res.Body), &shift)
+	err = json.Unmarshal([]byte(res.Body), &playlist)
 	assert.NoError(t, err)
 	assert.Equal(t, http.StatusCreated, res.StatusCode)
-	assert.NotNil(t, shift.ID)
-	id = shift.ID
+	assert.NotNil(t, playlist.ID)
+	id = playlist.ID
 }
 
-func TestCanGetAllShifts(t *testing.T) {
+func TestCanGetAllPlaylists(t *testing.T) {
 	ctx := context.Background()
-	u := []*shifts.Shift{}
+	u := []*playlists.Playlist{}
 	h := setup()
 	req := helpers.Request{
 		HTTPMethod: "GET",
@@ -75,12 +75,12 @@ func TestCanGetAllShifts(t *testing.T) {
 	err = json.Unmarshal([]byte(res.Body), &u)
 	assert.NoError(t, err)
 	assert.NotNil(t, u)
-	assert.Equal(t, "Test Shift", u[0].Name)
+	assert.Equal(t, "Test Playlist", u[0].Name)
 }
 
-func TestCanGetShift(t *testing.T) {
+func TestCanGetPlaylist(t *testing.T) {
 	ctx := context.Background()
-	u := &shifts.Shift{}
+	u := &playlists.Playlist{}
 	h := setup()
 	req := helpers.Request{
 		HTTPMethod: "GET",
@@ -91,10 +91,10 @@ func TestCanGetShift(t *testing.T) {
 	res, err := helpers.Router(h)(ctx, req)
 	err = json.Unmarshal([]byte(res.Body), &u)
 	assert.NoError(t, err)
-	assert.Equal(t, "Test Shift", u.Name)
+	assert.Equal(t, "Test Playlist", u.Name)
 }
 
-func TestCanUpdateShift(t *testing.T) {
+func TestCanUpdatePlaylist(t *testing.T) {
 	ctx := context.Background()
 	r := map[string]interface{}{}
 	h := setup()
@@ -103,7 +103,7 @@ func TestCanUpdateShift(t *testing.T) {
 		PathParameters: map[string]string{
 			"id": id,
 		},
-		Body: updatedShift,
+		Body: updatedPlaylist,
 	}
 	res, err := helpers.Router(h)(ctx, req)
 	err = json.Unmarshal([]byte(res.Body), &r)
@@ -111,7 +111,7 @@ func TestCanUpdateShift(t *testing.T) {
 	assert.Equal(t, true, r["success"])
 }
 
-func TestCanDeleteShift(t *testing.T) {
+func TestCanDeletePlaylist(t *testing.T) {
 	ctx := context.Background()
 	r := map[string]interface{}{}
 	h := setup()

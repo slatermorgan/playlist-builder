@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"os"
 
-	delivery "github.com/slatermorgan/go-care/playlists/deliveries/http"
+	delivery "github.com/slatermorgan/playlist-builder/playlists/deliveries/http"
 )
 
 func main() {

@@ -20,9 +20,9 @@ func NewDynamoDBRepository(ddb *dynamodb.DynamoDB, tableName string) *DynamoDBRe
 	return &DynamoDBRepository{ddb, tableName}
 }
 
-// Get a shift
-func (r *DynamoDBRepository) Get(ctx context.Context, id string) (*Shift, error) {
-	shift := &Shift{}
+// Get a playlist
+func (r *DynamoDBRepository) Get(ctx context.Context, id string) (*Playlist, error) {
+	playlist := &Playlist{}
 	input := &dynamodb.GetItemInput{
 		TableName: aws.String(r.tableName),
 		Key: map[string]*dynamodb.AttributeValue{
@@ -37,16 +37,16 @@ func (r *DynamoDBRepository) Get(ctx context.Context, id string) (*Shift, error)
 		return nil, err
 	}
 
-	if err := dynamodbattribute.UnmarshalMap(result.Item, &shift); err != nil {
+	if err := dynamodbattribute.UnmarshalMap(result.Item, &playlist); err != nil {
 		return nil, err
 	}
 
-	return shift, nil
+	return playlist, nil
 }
 
-// GetAll shifts
-func (r *DynamoDBRepository) GetAll(ctx context.Context) ([]*Shift, error) {
-	shifts := make([]*Shift, 0)
+// GetAll playlists
+func (r *DynamoDBRepository) GetAll(ctx context.Context) ([]*Playlist, error) {
+	playlists := make([]*Playlist, 0)
 	result, err := r.session.ScanWithContext(ctx, &dynamodb.ScanInput{
 		TableName: aws.String(r.tableName),
 	})
@@ -54,32 +54,32 @@ func (r *DynamoDBRepository) GetAll(ctx context.Context) ([]*Shift, error) {
 		return nil, err
 	}
 
-	if err := dynamodbattribute.UnmarshalListOfMaps(result.Items, &shifts); err != nil {
+	if err := dynamodbattribute.UnmarshalListOfMaps(result.Items, &playlists); err != nil {
 		return nil, err
 	}
 
-	return shifts, nil
+	return playlists, nil
 }
 
-type updateShift struct {
+type updatePlaylist struct {
 	TimeStart  int    `json:":ts"`
 	TimeEnd    int    `json:":te"`
 	ClientID   string `json:":c"`
 	AssignedTo string `json:":a"`
 }
 
-type shiftKey struct {
+type playlistKey struct {
 	ID string `json:":id"`
 }
 
-// Update a shift
-func (r *DynamoDBRepository) Update(ctx context.Context, id string, shift *UpdateShift) error {
+// Update a playlist
+func (r *DynamoDBRepository) Update(ctx context.Context, id string, playlist *UpdatePlaylist) error {
 	log.Println("id", id)
-	update, err := dynamodbattribute.MarshalMap(&updateShift{
-		TimeStart:  shift.TimeStart,
-		TimeEnd:    shift.TimeEnd,
-		ClientID:   shift.ClientID,
-		AssignedTo: shift.AssignedTo,
+	update, err := dynamodbattribute.MarshalMap(&updatePlaylist{
+		TimeStart:  playlist.TimeStart,
+		TimeEnd:    playlist.TimeEnd,
+		ClientID:   playlist.ClientID,
+		AssignedTo: playlist.AssignedTo,
 	})
 	if err != nil {
 		return nil
@@ -102,9 +102,9 @@ func (r *DynamoDBRepository) Update(ctx context.Context, id string, shift *Updat
 	return err
 }
 
-// Create a shift
-func (r *DynamoDBRepository) Create(ctx context.Context, shift *Shift) error {
-	item, err := dynamodbattribute.MarshalMap(shift)
+// Create a playlist
+func (r *DynamoDBRepository) Create(ctx context.Context, playlist *Playlist) error {
+	item, err := dynamodbattribute.MarshalMap(playlist)
 	if err != nil {
 		return err
 	}
@@ -117,7 +117,7 @@ func (r *DynamoDBRepository) Create(ctx context.Context, shift *Shift) error {
 	return err
 }
 
-// Delete a shift
+// Delete a playlist
 func (r *DynamoDBRepository) Delete(ctx context.Context, id string) error {
 	input := &dynamodb.DeleteItemInput{
 		TableName: aws.String(r.tableName),

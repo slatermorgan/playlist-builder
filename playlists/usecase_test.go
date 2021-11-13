@@ -8,8 +8,8 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCanGetShift(t *testing.T) {
-	expected := &Shift{Name: "Ewan"}
+func TestCanGetPlaylist(t *testing.T) {
+	expected := &Playlist{Name: "Ewan"}
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -18,16 +18,16 @@ func TestCanGetShift(t *testing.T) {
 
 	uc := Usecase{repo}
 
-	shift, err := uc.Get(context.Background(), "abc123")
+	playlist, err := uc.Get(context.Background(), "abc123")
 
 	assert.NoError(t, err)
-	assert.Equal(t, expected, shift)
+	assert.Equal(t, expected, playlist)
 }
 
-func TestCanGetAllShifts(t *testing.T) {
-	expected := []*Shift{
-		&Shift{Name: "test1", Age: 1},
-		&Shift{Name: "test2", Age: 2},
+func TestCanGetAllPlaylists(t *testing.T) {
+	expected := []*Playlist{
+		&Playlist{Name: "test1", Age: 1},
+		&Playlist{Name: "test2", Age: 2},
 	}
 
 	ctrl := gomock.NewController(t)
@@ -38,14 +38,14 @@ func TestCanGetAllShifts(t *testing.T) {
 
 	uc := Usecase{repo}
 
-	shifts, err := uc.GetAll(context.Background())
+	playlists, err := uc.GetAll(context.Background())
 	assert.NoError(t, err)
-	assert.Len(t, shifts, 2)
-	assert.Equal(t, expected, shifts)
+	assert.Len(t, playlists, 2)
+	assert.Equal(t, expected, playlists)
 }
 
-func TestCanCreateShift(t *testing.T) {
-	expected := &Shift{
+func TestCanCreatePlaylist(t *testing.T) {
+	expected := &Playlist{
 		Name:  "testing",
 		Email: "test@test.com",
 		Age:   30,
@@ -61,27 +61,27 @@ func TestCanCreateShift(t *testing.T) {
 	assert.NoError(t, err)
 }
 
-func TestCanValidateShift(t *testing.T) {
+func TestCanValidatePlaylist(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 	repo := NewMockrepository(ctrl)
 
 	uc := Usecase{repo}
 
-	shifts := []*Shift{
-		&Shift{},                      // No required fields
-		&Shift{Name: "", Age: 0},      // Blank name
-		&Shift{Name: "123", Age: 200}, // Integers as name, age too high
-		&Shift{Email: "nope"},
+	playlists := []*Playlist{
+		&Playlist{},                      // No required fields
+		&Playlist{Name: "", Age: 0},      // Blank name
+		&Playlist{Name: "123", Age: 200}, // Integers as name, age too high
+		&Playlist{Email: "nope"},
 	}
-	for _, val := range shifts {
+	for _, val := range playlists {
 		err := uc.Create(context.Background(), val)
 		assert.Error(t, err)
 	}
 }
 
-func TestCanUpdateShift(t *testing.T) {
-	shift := &UpdateShift{
+func TestCanUpdatePlaylist(t *testing.T) {
+	playlist := &UpdatePlaylist{
 		Name:  "new name",
 		Email: "test@test.com",
 		Age:   20,
@@ -89,21 +89,21 @@ func TestCanUpdateShift(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 	repo := NewMockrepository(ctrl)
-	repo.EXPECT().Update(context.Background(), "abc123", shift).Return(nil)
+	repo.EXPECT().Update(context.Background(), "abc123", playlist).Return(nil)
 	uc := Usecase{repo}
-	err := uc.Update(context.Background(), "abc123", shift)
+	err := uc.Update(context.Background(), "abc123", playlist)
 	assert.NoError(t, err)
 }
 
-func TestCanDeleteShift(t *testing.T) {
-	shift := &Shift{
+func TestCanDeletePlaylist(t *testing.T) {
+	playlist := &Playlist{
 		ID: "abc123",
 	}
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 	repo := NewMockrepository(ctrl)
-	repo.EXPECT().Delete(context.Background(), shift.ID).Return(nil)
+	repo.EXPECT().Delete(context.Background(), playlist.ID).Return(nil)
 	uc := Usecase{repo}
-	err := uc.Delete(context.Background(), shift.ID)
+	err := uc.Delete(context.Background(), playlist.ID)
 	assert.NoError(t, err)
 }

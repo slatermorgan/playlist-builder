@@ -12,17 +12,17 @@ import (
 )
 
 // UseService is the top level signature of this service
-type ShiftService interface {
-	Get(ctx context.Context, id string) (*Shift, error)
-	GetAll(ctx context.Context) ([]*Shift, error)
-	Update(ctx context.Context, id string, shift *UpdateShift) error
-	Create(ctx context.Context, shift *Shift) error
+type PlaylistService interface {
+	Get(ctx context.Context, id string) (*Playlist, error)
+	GetAll(ctx context.Context) ([]*Playlist, error)
+	Update(ctx context.Context, id string, playlist *UpdatePlaylist) error
+	Create(ctx context.Context, playlist *Playlist) error
 	Delete(ctx context.Context, id string) error
 }
 
 // Init sets up an instance of this domains
 // usecase, pre-configured with the dependencies.
-func Init(integration bool) (ShiftService, error) {
+func Init(integration bool) (PlaylistService, error) {
 	region := os.Getenv("AWS_REGION")
 	sess, err := session.NewSession(&aws.Config{
 		Region: aws.String(region)},
