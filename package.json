@@ -1,0 +1,14 @@
+{
+  "name": "go-care",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com/slatermorgan/go-care.git",
+  "author": "slatermorgan",
+  "license": "MIT",
+  "dependencies": {
+    "serverless-jetpack": "^0.6.0"
+  },
+  "devDependencies": {
+    "serverless-offline": "^8.0.0"
+  }
+}
