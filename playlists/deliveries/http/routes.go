@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"playlist-builder/playlists"
 	"time"
 
 	"github.com/gorilla/mux"
