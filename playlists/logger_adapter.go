@@ -3,6 +3,7 @@ package playlists
 import (
 	"context"
 
+	"github.com/slatermorgan/playlist-builder/pkg/spotify"
 	"go.uber.org/zap"
 )
 
@@ -20,7 +21,7 @@ func (a *LoggerAdapter) logErr(err error) {
 }
 
 // Get a single playlist
-func (a *LoggerAdapter) Get(ctx context.Context, id string) (*Playlist, error) {
+func (a *LoggerAdapter) Get(ctx context.Context, id string) (*spotify.Playlist, error) {
 	defer a.Logger.Sync()
 	a.Logger.With(zap.String("id", id))
 	a.Logger.Info("getting a single playlist")
@@ -30,7 +31,7 @@ func (a *LoggerAdapter) Get(ctx context.Context, id string) (*Playlist, error) {
 }
 
 // GetAll gets all playlists
-func (a *LoggerAdapter) GetAll(ctx context.Context) ([]*Playlist, error) {
+func (a *LoggerAdapter) GetAll(ctx context.Context) ([]*spotify.Playlist, error) {
 	defer a.Logger.Sync()
 	a.Logger.Info("getting all playlists")
 	playlists, err := a.Usecase.GetAll(ctx)
@@ -39,7 +40,7 @@ func (a *LoggerAdapter) GetAll(ctx context.Context) ([]*Playlist, error) {
 }
 
 // Update a single playlist
-func (a *LoggerAdapter) Update(ctx context.Context, id string, playlist *UpdatePlaylist) error {
+func (a *LoggerAdapter) Update(ctx context.Context, id string, playlist *spotify.UpdatePlaylist) error {
 	defer a.Logger.Sync()
 	a.Logger.With(zap.String("id", id))
 	a.Logger.Info("updating a single playlist")
@@ -49,12 +50,13 @@ func (a *LoggerAdapter) Update(ctx context.Context, id string, playlist *UpdateP
 }
 
 // Create a single playlist
-func (a *LoggerAdapter) Create(ctx context.Context, playlist *Playlist) error {
+func (a *LoggerAdapter) Create(ctx context.Context, playlist *spotify.Playlist) (*LineupPlaylist, error) {
 	defer a.Logger.Sync()
 	a.Logger.Info("creating a single playlist")
-	err := a.Usecase.Create(ctx, playlist)
+	createdPlaylist, err := a.Usecase.Create(ctx, playlist)
 	a.logErr(err)
-	return err
+
+	return createdPlaylist, err
 }
 
 // Delete a single playlist

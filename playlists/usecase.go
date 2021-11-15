@@ -5,6 +5,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
+	"github.com/slatermorgan/playlist-builder/pkg/spotify"
 	"gopkg.in/go-playground/validator.v9"
 )
 
@@ -12,47 +13,37 @@ var (
 	validate *validator.Validate
 )
 
-type sdk interface {
-	GetArtistsTopTrack(ctx context.Context, id string) (*Playlist, error)
-	CreatePlaylist(ctx context.Context) ([]*Playlist, error)
-	AddTrackToPlaylist(ctx context.Context, id string, playlist *UpdatePlaylist) error
+type Client interface {
+	GetArtistsTopTracks(artistID string) ([]*spotify.Track, error)
+	SearchForArtist(q string) ([]*spotify.Artist, error)
+	AddItemsToPlaylist(updatePlaylist spotify.UpdatePlaylist, userID string) error
+	CreatePlaylist(playlistReq spotify.Playlist, playlistID string) (*spotify.Playlist, error)
 }
 
 // Usecase for interacting with playlists
 type Usecase struct {
-	SDK sdk
+	Client Client
 }
 
 // Get a single playlist
-func (u *Usecase) Get(ctx context.Context, id string) (*Playlist, error) {
+func (u *Usecase) Get(ctx context.Context, id string) (*spotify.Playlist, error) {
 	return nil, errors.Wrap(nil, "method not supported")
 }
 
 // GetAll gets all playlists
-func (u *Usecase) GetAll(ctx context.Context) ([]*Playlist, error) {
+func (u *Usecase) GetAll(ctx context.Context) ([]*spotify.Playlist, error) {
 	return nil, errors.Wrap(nil, "method not supported")
 }
 
 // Update a single playlist
-func (u *Usecase) Update(ctx context.Context, id string, playlist *UpdatePlaylist) error {
+func (u *Usecase) Update(ctx context.Context, id string, playlist *spotify.UpdatePlaylist) error {
 	return errors.Wrap(nil, "method not supported")
 }
 
 // Create a single playlist
-func (u *Usecase) Create(ctx context.Context, playlist *Playlist) (*Playlist, error) {
-	validate = validator.New()
-	if err := validate.Struct(*playlist); err != nil {
-		validationErrors := err.(validator.ValidationErrors)
-		// Here we should create custom returns
-		return nil, validationErrors
-	}
-
-	playlist.ID = u.newID()
-	if playlist, err := u.SDK.CreatePlaylist(playlist)(ctx, playlist); err != nil {
-		return nil, errors.Wrap(err, "error creating new playlist")
-	}
-
-	return playlist, nil
+func (u *Usecase) Create(ctx context.Context, playlist *spotify.Playlist) (*LineupPlaylist, error) {
+	// logic goes here
+	return &LineupPlaylist{}, nil
 }
 
 // Delete a single playlist

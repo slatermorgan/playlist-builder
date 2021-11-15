@@ -32,3 +32,16 @@ type Track struct {
 	HRef       string `json:"href"`
 	IsPlayable bool   `json:"is_playable"`
 }
+
+type Playlist struct {
+	ID          string `json:"id"`
+	URI         string `json:"uri"`
+	Name        string `json:"name"`
+	HRef        string `json:"href"`
+	IsPublic    bool   `json:"public"`
+	Description string `json:"description"`
+}
+
+type UpdatePlaylist struct {
+	URIs string `json:"uris"`
+}

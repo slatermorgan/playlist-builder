@@ -8,6 +8,7 @@ import (
 
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/slatermorgan/playlist-builder/pkg/helpers"
+	"github.com/slatermorgan/playlist-builder/pkg/spotify"
 	"github.com/slatermorgan/playlist-builder/playlists"
 )
 
@@ -37,7 +38,7 @@ func (h *handler) GetAll(ctx context.Context) (helpers.Response, error) {
 
 // Update a single playlist
 func (h *handler) Update(ctx context.Context, id string, body []byte) (helpers.Response, error) {
-	updatePlaylist := &playlists.UpdatePlaylist{}
+	updatePlaylist := &spotify.UpdatePlaylist{}
 	if err := json.Unmarshal(body, &updatePlaylist); err != nil {
 		return helpers.Fail(err, http.StatusInternalServerError)
 	}
@@ -53,16 +54,17 @@ func (h *handler) Update(ctx context.Context, id string, body []byte) (helpers.R
 
 // Create a playlist
 func (h *handler) Create(ctx context.Context, body []byte) (helpers.Response, error) {
-	playlist := &playlists.Playlist{}
+	playlist := &spotify.Playlist{}
 	if err := json.Unmarshal(body, &playlist); err != nil {
 		return helpers.Fail(err, http.StatusInternalServerError)
 	}
 
-	if err := h.usecase.Create(ctx, playlist); err != nil {
+	createdPlaylist, err := h.usecase.Create(ctx, playlist)
+	if err != nil {
 		return helpers.Fail(err, http.StatusInternalServerError)
 	}
 
-	return helpers.Success(playlist, http.StatusCreated)
+	return helpers.Success(createdPlaylist, http.StatusCreated)
 }
 
 // Delete a playlist

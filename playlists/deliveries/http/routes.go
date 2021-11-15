@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
+	"github.com/slatermorgan/playlist-builder/pkg/spotify"
 	"github.com/slatermorgan/playlist-builder/playlists"
 )
 
@@ -70,7 +71,7 @@ func (d *delivery) Update(w http.ResponseWriter, r *http.Request) {
 	defer cancel()
 
 	decoder := json.NewDecoder(r.Body)
-	playlist := &playlists.UpdatePlaylist{}
+	playlist := &spotify.UpdatePlaylist{}
 	if err := decoder.Decode(&playlist); err != nil {
 		writeErr(w, err)
 		return
@@ -90,35 +91,30 @@ func (d *delivery) Create(w http.ResponseWriter, r *http.Request) {
 	defer cancel()
 
 	decoder := json.NewDecoder(r.Body)
-	playlist := &playlists.Playlist{}
+	playlist := &spotify.Playlist{}
 	if err := decoder.Decode(&playlist); err != nil {
 		writeErr(w, err)
 		return
 	}
 
-	if err := d.usecase.Create(ctx, playlist); err != nil {
+	createdPlaylist, err := d.usecase.Create(ctx, playlist)
+	if err != nil {
 		writeErr(w, err)
 		return
 	}
 
-	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte("Ok"))
+	data, err := json.Marshal(createdPlaylist)
+	if err != nil {
+		writeErr(w, err)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write(data)
 }
 
 func (d *delivery) Delete(w http.ResponseWriter, r *http.Request) {
-	ctx, cancel := context.WithTimeout(context.Background(), fiveSecondsTimeout)
-	defer cancel()
-
-	vars := mux.Vars(r)
-	id := vars["id"]
-
-	if err := d.usecase.Delete(ctx, id); err != nil {
-		writeErr(w, err)
-		return
-	}
-
-	w.WriteHeader(http.StatusNoContent)
-	w.Write([]byte("Deleted"))
+	w.Write([]byte("method not found"))
 }
 
 // Routes -
