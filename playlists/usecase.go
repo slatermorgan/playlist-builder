@@ -17,7 +17,7 @@ type Client interface {
 	GetArtistsTopTracks(artistID string) ([]*spotify.Track, error)
 	SearchForArtist(q string) ([]*spotify.Artist, error)
 	AddItemsToPlaylist(updatePlaylist spotify.UpdatePlaylist, userID string) error
-	CreatePlaylist(playlistReq spotify.Playlist, playlistID string) (*spotify.Playlist, error)
+	CreatePlaylist(playlistReq *spotify.Playlist, playlistID string) (*spotify.Playlist, error)
 }
 
 // Usecase for interacting with playlists
@@ -41,8 +41,12 @@ func (u *Usecase) Update(ctx context.Context, id string, playlist *spotify.Updat
 }
 
 // Create a single playlist
-func (u *Usecase) Create(ctx context.Context, playlist *spotify.Playlist) (*LineupPlaylist, error) {
-	// logic goes here
+func (u *Usecase) Create(
+	ctx context.Context,
+	lineupPlaylist *CreatePlaylist,
+) (*LineupPlaylist, error) {
+	playlistReq := &spotify.Playlist{}
+	u.Client.CreatePlaylist(playlistReq, "")
 	return &LineupPlaylist{}, nil
 }
 

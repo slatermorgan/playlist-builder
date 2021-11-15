@@ -91,7 +91,7 @@ func (d *delivery) Create(w http.ResponseWriter, r *http.Request) {
 	defer cancel()
 
 	decoder := json.NewDecoder(r.Body)
-	playlist := &spotify.Playlist{}
+	playlist := &playlists.CreatePlaylist{}
 	if err := decoder.Decode(&playlist); err != nil {
 		writeErr(w, err)
 		return

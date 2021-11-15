@@ -31,23 +31,23 @@ func (s *SDK) SearchForArtist(q string) ([]*Artist, error) {
 	return searchResults.artists.Items, nil
 }
 
-func (s *SDK) AddItemsToPlaylist(updatePlaylist UpdatePlaylist, userID string) error {
+func (s *SDK) AddItemsToPlaylist(updatePlaylist UpdatePlaylist, playlistID string) error {
 	err := s.client.Post(
 		updatePlaylist,
 		nil,
-		"/users/"+userID+"/playlists",
+		"/users/"+playlistID+"/playlists",
 	)
 
 	return err
 }
 
-func (s *SDK) CreatePlaylist(playlistReq Playlist, playlistID string) (*Playlist, error) {
+func (s *SDK) CreatePlaylist(playlistReq *Playlist, userID string) (*Playlist, error) {
 	var playlistRes *Playlist
 
 	err := s.client.Post(
 		playlistReq,
 		playlistRes,
-		"/playlists/"+playlistID+"/tracks",
+		"/playlists/"+userID+"/tracks",
 	)
 	if err != nil {
 		return nil, err

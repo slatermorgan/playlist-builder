@@ -50,7 +50,7 @@ func (a *LoggerAdapter) Update(ctx context.Context, id string, playlist *spotify
 }
 
 // Create a single playlist
-func (a *LoggerAdapter) Create(ctx context.Context, playlist *spotify.Playlist) (*LineupPlaylist, error) {
+func (a *LoggerAdapter) Create(ctx context.Context, playlist *CreatePlaylist) (*LineupPlaylist, error) {
 	defer a.Logger.Sync()
 	a.Logger.Info("creating a single playlist")
 	createdPlaylist, err := a.Usecase.Create(ctx, playlist)

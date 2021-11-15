@@ -12,7 +12,7 @@ type PlaylistService interface {
 	Get(ctx context.Context, id string) (*spotify.Playlist, error)
 	GetAll(ctx context.Context) ([]*spotify.Playlist, error)
 	Update(ctx context.Context, id string, playlist *spotify.UpdatePlaylist) error
-	Create(ctx context.Context, playlist *spotify.Playlist) (*LineupPlaylist, error)
+	Create(ctx context.Context, playlist *CreatePlaylist) (*LineupPlaylist, error)
 	Delete(ctx context.Context, id string) error
 }
 

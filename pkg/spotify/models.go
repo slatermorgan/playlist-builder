@@ -11,8 +11,8 @@ type SearchResults struct {
 type ArtistsSearchResults struct {
 	Items       []*Artist `json:"items"`
 	Limit       int       `json:"limit"`
-	NextURL     string    `json:"limit"`
-	previousURL string    `json:"previous"`
+	NextURL     string    `json:"next"`
+	PreviousURL string    `json:"previous"`
 	Total       int       `json:"total"`
 	Offset      int       `json:"offset"`
 }

@@ -16,4 +16,4 @@ gomodgen:
 offline:
 	sls offline start --useDocker --printOutput
 local:
-	CMDPORT=8005 TABLE_NAME=example-playlists go run cmd/server/main.go
+	PORT=8005 TABLE_NAME=example-playlists go run cmd/server/main.go
