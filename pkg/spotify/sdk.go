@@ -20,6 +20,17 @@ func (s *SDK) GetArtistsTopTracks(artistID string) ([]*Track, error) {
 	return artistTopTracks.tracks, nil
 }
 
+func (s *SDK) GetPlaylist(playlistID string) (*Playlist, error) {
+	var playlist *Playlist
+
+	err := s.client.Get(playlist, "/playlist/"+playlistID)
+	if err != nil {
+		return nil, err
+	}
+
+	return playlist, nil
+}
+
 func (s *SDK) SearchForArtist(q string) ([]*Artist, error) {
 	var searchResults *SearchResults
 
