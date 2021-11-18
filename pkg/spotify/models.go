@@ -19,6 +19,7 @@ type ArtistsSearchResults struct {
 
 type Artist struct {
 	ID         string `json:"id"`
+	Name       string `json:"name"`
 	HRef       string `json:"href"`
 	URI        string `json:"uri"`
 	Popularity int64  `json:"popularity"`

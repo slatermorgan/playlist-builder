@@ -1,19 +1,9 @@
 package playlists
 
 // Playlist -
-type LineupPlaylist struct {
-	ID         string `json:"id"`
-	TimeStart  int    `json:"timeStart" validate:"required,numeric"`
-	TimeEnd    int    `json:"timeEnd" validate:"required,numeric"`
-	ClientID   string `json:"clientID" validate:"required"`
-	AssignedTo string `json:"assignedTo"`
-}
-
-// Playlist -
 type CreatePlaylist struct {
-	ID         string `json:"id"`
-	TimeStart  int    `json:"timeStart" validate:"required,numeric"`
-	TimeEnd    int    `json:"timeEnd" validate:"required,numeric"`
-	ClientID   string `json:"clientID" validate:"required"`
-	AssignedTo string `json:"assignedTo"`
+	Name        string   `json:"name" validate:"required"`
+	IsPublic    bool     `json:"isPublic"`
+	Description string   `json:"description"`
+	ArtistNames []string `json:"artistNames" validate:"required"`
 }
