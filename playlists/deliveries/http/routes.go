@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
-	"github.com/slatermorgan/playlist-builder/pkg/spotify"
 	"github.com/slatermorgan/playlist-builder/playlists"
 )
 
@@ -23,67 +22,24 @@ func writeErr(w http.ResponseWriter, err error) {
 	w.Write([]byte(err.Error()))
 }
 
+func writeInvalidMethod(w http.ResponseWriter) {
+	w.WriteHeader(http.StatusMethodNotAllowed)
+	w.Write([]byte("method not supported"))
+}
+
 func (d *delivery) Get(w http.ResponseWriter, r *http.Request) {
-	ctx, cancel := context.WithTimeout(context.Background(), fiveSecondsTimeout)
-	defer cancel()
-
-	vars := mux.Vars(r)
-	id := vars["id"]
-
-	playlist, err := d.usecase.Get(ctx, id)
-	if err != nil {
-		writeErr(w, err)
-		return
-	}
-
-	data, err := json.Marshal(playlist)
-	if err != nil {
-		writeErr(w, err)
-		return
-	}
-
-	w.WriteHeader(http.StatusOK)
-	w.Write(data)
+	writeInvalidMethod(w)
+	return
 }
 
 func (d *delivery) GetAll(w http.ResponseWriter, r *http.Request) {
-	ctx, cancel := context.WithTimeout(context.Background(), fiveSecondsTimeout)
-	defer cancel()
-
-	playlists, err := d.usecase.GetAll(ctx)
-	if err != nil {
-		writeErr(w, err)
-		return
-	}
-
-	data, err := json.Marshal(playlists)
-	if err != nil {
-		writeErr(w, err)
-		return
-	}
-
-	w.WriteHeader(http.StatusOK)
-	w.Write(data)
+	writeInvalidMethod(w)
+	return
 }
 
 func (d *delivery) Update(w http.ResponseWriter, r *http.Request) {
-	ctx, cancel := context.WithTimeout(context.Background(), fiveSecondsTimeout)
-	defer cancel()
-
-	decoder := json.NewDecoder(r.Body)
-	playlist := &spotify.UpdatePlaylist{}
-	if err := decoder.Decode(&playlist); err != nil {
-		writeErr(w, err)
-		return
-	}
-
-	vars := mux.Vars(r)
-	id := vars["id"]
-
-	if err := d.usecase.Update(ctx, id, playlist); err != nil {
-		writeErr(w, err)
-		return
-	}
+	writeInvalidMethod(w)
+	return
 }
 
 func (d *delivery) Create(w http.ResponseWriter, r *http.Request) {
@@ -114,7 +70,8 @@ func (d *delivery) Create(w http.ResponseWriter, r *http.Request) {
 }
 
 func (d *delivery) Delete(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("method not found"))
+	writeInvalidMethod(w)
+	return
 }
 
 // Routes -

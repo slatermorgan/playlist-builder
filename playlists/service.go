@@ -9,11 +9,7 @@ import (
 
 // UseService is the top level signature of this service
 type PlaylistService interface {
-	Get(ctx context.Context, id string) (*spotify.Playlist, error)
-	GetAll(ctx context.Context) ([]*spotify.Playlist, error)
-	Update(ctx context.Context, id string, playlist *spotify.UpdatePlaylist) error
 	Create(ctx context.Context, playlist *CreatePlaylist) (*spotify.Playlist, error)
-	Delete(ctx context.Context, id string) error
 }
 
 // Init sets up an instance of this domains

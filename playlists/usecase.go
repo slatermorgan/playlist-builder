@@ -29,21 +29,6 @@ type Usecase struct {
 	Client Client
 }
 
-// Get a single playlist
-func (u *Usecase) Get(ctx context.Context, id string) (*spotify.Playlist, error) {
-	return nil, errors.Wrap(nil, "method not supported")
-}
-
-// GetAll gets all playlists
-func (u *Usecase) GetAll(ctx context.Context) ([]*spotify.Playlist, error) {
-	return nil, errors.Wrap(nil, "method not supported")
-}
-
-// Update a single playlist
-func (u *Usecase) Update(ctx context.Context, id string, playlist *spotify.UpdatePlaylist) error {
-	return errors.Wrap(nil, "method not supported")
-}
-
 // Create a single playlist
 func (u *Usecase) Create(
 	ctx context.Context,
@@ -106,11 +91,6 @@ func (u *Usecase) Create(
 	}
 
 	return newPlaylist, nil
-}
-
-// Delete a single playlist
-func (u *Usecase) Delete(ctx context.Context, id string) error {
-	return errors.Wrap(nil, "method not supported")
 }
 
 func (u *Usecase) newID() string {

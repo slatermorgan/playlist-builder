@@ -3,12 +3,12 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"log"
 	"net/http"
 
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/slatermorgan/playlist-builder/pkg/helpers"
-	"github.com/slatermorgan/playlist-builder/pkg/spotify"
 	"github.com/slatermorgan/playlist-builder/playlists"
 )
 
@@ -16,40 +16,26 @@ type handler struct {
 	usecase playlists.PlaylistService
 }
 
+func returnInvalidMethod() (helpers.Response, error) {
+	return helpers.Fail(
+		errors.New("method not supported"),
+		http.StatusMethodNotAllowed,
+	)
+}
+
 // Get a single playlist
 func (h *handler) Get(ctx context.Context, id string) (helpers.Response, error) {
-	playlist, err := h.usecase.Get(ctx, id)
-	if err != nil {
-		return helpers.Fail(err, http.StatusInternalServerError)
-	}
-
-	return helpers.Success(playlist, http.StatusOK)
+	return returnInvalidMethod()
 }
 
 // GetAll playlists
 func (h *handler) GetAll(ctx context.Context) (helpers.Response, error) {
-	playlists, err := h.usecase.GetAll(ctx)
-	if err != nil {
-		return helpers.Fail(err, http.StatusInternalServerError)
-	}
-
-	return helpers.Success(playlists, http.StatusOK)
+	return returnInvalidMethod()
 }
 
 // Update a single playlist
 func (h *handler) Update(ctx context.Context, id string, body []byte) (helpers.Response, error) {
-	updatePlaylist := &spotify.UpdatePlaylist{}
-	if err := json.Unmarshal(body, &updatePlaylist); err != nil {
-		return helpers.Fail(err, http.StatusInternalServerError)
-	}
-
-	if err := h.usecase.Update(ctx, id, updatePlaylist); err != nil {
-		return helpers.Fail(err, http.StatusInternalServerError)
-	}
-
-	return helpers.Success(map[string]interface{}{
-		"success": true,
-	}, http.StatusNoContent)
+	return returnInvalidMethod()
 }
 
 // Create a playlist
@@ -69,13 +55,7 @@ func (h *handler) Create(ctx context.Context, body []byte) (helpers.Response, er
 
 // Delete a playlist
 func (h *handler) Delete(ctx context.Context, id string) (helpers.Response, error) {
-	if err := h.usecase.Delete(ctx, id); err != nil {
-		return helpers.Fail(err, http.StatusInternalServerError)
-	}
-
-	return helpers.Success(map[string]interface{}{
-		"success": true,
-	}, http.StatusNoContent)
+	return returnInvalidMethod()
 }
 
 func main() {
