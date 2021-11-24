@@ -6,4 +6,5 @@ type CreatePlaylist struct {
 	IsPublic    bool     `json:"isPublic"`
 	Description string   `json:"description"`
 	ArtistNames []string `json:"artistNames" validate:"required"`
+	Token       string
 }

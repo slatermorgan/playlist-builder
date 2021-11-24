@@ -34,7 +34,7 @@ func Router(handler handler) func(context.Context, Request) (Response, error) {
 			return handler.Get(ctx, id)
 
 		case "POST":
-			return handler.Create(ctx, []byte(req.Body))
+			return handler.Create(ctx, []byte(req.Body), string(req.Headers["Authorization"]))
 
 		case "PUT":
 			id, ok := req.PathParameters["id"]

@@ -39,13 +39,13 @@ func (h *handler) Update(ctx context.Context, id string, body []byte) (helpers.R
 }
 
 // Create a playlist
-func (h *handler) Create(ctx context.Context, body []byte) (helpers.Response, error) {
+func (h *handler) Create(ctx context.Context, body []byte, token string) (helpers.Response, error) {
 	playlist := &playlists.CreatePlaylist{}
 	if err := json.Unmarshal(body, &playlist); err != nil {
 		return helpers.Fail(err, http.StatusInternalServerError)
 	}
 
-	createdPlaylist, err := h.usecase.Create(ctx, playlist)
+	createdPlaylist, err := h.usecase.Create(ctx, playlist, token)
 	if err != nil {
 		return helpers.Fail(err, http.StatusInternalServerError)
 	}

@@ -21,10 +21,10 @@ func (a *LoggerAdapter) logErr(err error) {
 }
 
 // Create a single playlist
-func (a *LoggerAdapter) Create(ctx context.Context, playlist *CreatePlaylist) (*spotify.Playlist, error) {
+func (a *LoggerAdapter) Create(ctx context.Context, playlist *CreatePlaylist, token string) (*spotify.Playlist, error) {
 	defer a.Logger.Sync()
 	a.Logger.Info("creating a single playlist")
-	createdPlaylist, err := a.Usecase.Create(ctx, playlist)
+	createdPlaylist, err := a.Usecase.Create(ctx, playlist, token)
 	a.logErr(err)
 
 	return createdPlaylist, err

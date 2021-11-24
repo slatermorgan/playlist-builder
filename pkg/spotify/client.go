@@ -6,6 +6,7 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"time"
 )
 
 type Config struct {
@@ -14,6 +15,7 @@ type Config struct {
 
 type Client struct {
 	config *Config
+	token  string
 }
 
 const contentType = "application/json"
@@ -42,8 +44,23 @@ func createReader(requestModel interface{}) (io.Reader, error) {
 	return bytes.NewReader(requestByte), nil
 }
 
+func (c *Client) setBearer(req *http.Request) {
+	bearer := "Bearer " + c.token
+	req.Header.Set("Authorization", bearer)
+}
+
 func (c *Client) Get(responseModel interface{}, url string) error {
-	resp, err := http.Get(c.config.BaseURL + url)
+	client := &http.Client{
+		Timeout: time.Second * 10,
+	}
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return err
+	}
+
+	c.setBearer(req)
+
+	resp, err := client.Do(req)
 	if err != nil {
 		return err
 	}
@@ -66,7 +83,17 @@ func (c *Client) Post(
 		return err
 	}
 
-	resp, err := http.Post(c.config.BaseURL+url, contentType, body)
+	client := &http.Client{
+		Timeout: time.Second * 10,
+	}
+	req, err := http.NewRequest("POST", url, body)
+	if err != nil {
+		return err
+	}
+
+	c.setBearer(req)
+
+	resp, err := client.Do(req)
 	if err != nil {
 		return err
 	}

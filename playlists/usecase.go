@@ -16,24 +16,27 @@ var (
 
 const tracksPerArtist = 5
 
-type Client interface {
+type SDK interface {
 	GetArtistsTopTracks(artistID string) ([]*spotify.Track, error)
 	SearchForArtist(q string) ([]*spotify.Artist, error)
 	AddItemsToPlaylist(updatePlaylist spotify.UpdatePlaylist, userID string) error
 	CreatePlaylist(playlistReq *spotify.Playlist, userID string) (*spotify.Playlist, error)
 	GetPlaylist(playlistID string) (*spotify.Playlist, error)
+	SetClientToken(string)
 }
 
 // Usecase for interacting with playlists
 type Usecase struct {
-	Client Client
+	SDK SDK
 }
 
 // Create a single playlist
 func (u *Usecase) Create(
 	ctx context.Context,
 	createPlaylist *CreatePlaylist,
+	token string,
 ) (*spotify.Playlist, error) {
+	u.SDK.SetClientToken(token)
 	validate = validator.New()
 	if err := validate.Struct(*createPlaylist); err != nil {
 		validationErrors := err.(validator.ValidationErrors)
@@ -41,7 +44,7 @@ func (u *Usecase) Create(
 		return nil, validationErrors
 	}
 
-	newPlaylist, err := u.Client.CreatePlaylist(
+	newPlaylist, err := u.SDK.CreatePlaylist(
 		&spotify.Playlist{
 			Name:        createPlaylist.Name,
 			IsPublic:    createPlaylist.IsPublic,
@@ -55,14 +58,14 @@ func (u *Usecase) Create(
 
 	var playlistTrackURIs string
 	for _, name := range createPlaylist.ArtistNames {
-		artists, err := u.Client.SearchForArtist(name)
+		artists, err := u.SDK.SearchForArtist(name)
 		if err != nil {
 			return nil, errors.Wrap(nil, "failed to search artist: "+name)
 		}
 
 		for _, artist := range artists {
 			if artist.Name == name {
-				topTracks, err := u.Client.GetArtistsTopTracks(artist.ID)
+				topTracks, err := u.SDK.GetArtistsTopTracks(artist.ID)
 				if err != nil {
 					return nil, errors.Wrap(nil, "failed to search artist: "+name)
 				}
@@ -75,7 +78,7 @@ func (u *Usecase) Create(
 		playlistTrackURIs = strings.TrimRight(playlistTrackURIs, ",")
 	}
 
-	err = u.Client.AddItemsToPlaylist(
+	err = u.SDK.AddItemsToPlaylist(
 		spotify.UpdatePlaylist{
 			URIs: playlistTrackURIs,
 		},
@@ -85,7 +88,7 @@ func (u *Usecase) Create(
 		return nil, errors.Wrap(nil, "failed to add items to playlist ID: "+newPlaylist.ID)
 	}
 
-	newPlaylist, err = u.Client.GetPlaylist(newPlaylist.ID)
+	newPlaylist, err = u.SDK.GetPlaylist(newPlaylist.ID)
 	if err != nil {
 		return nil, errors.Wrap(nil, "failed to get playlist ID: "+newPlaylist.ID)
 	}

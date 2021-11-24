@@ -5,8 +5,12 @@ type SDK struct {
 }
 
 func New(config *Config) *SDK {
-	client := Client{config}
+	client := Client{config, ""}
 	return &SDK{client: client}
+}
+
+func (s *SDK) SetClientToken(token string) {
+	s.client.token = token
 }
 
 func (s *SDK) GetArtistsTopTracks(artistID string) ([]*Track, error) {

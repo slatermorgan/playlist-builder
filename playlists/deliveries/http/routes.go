@@ -53,7 +53,7 @@ func (d *delivery) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	createdPlaylist, err := d.usecase.Create(ctx, playlist)
+	createdPlaylist, err := d.usecase.Create(ctx, playlist, r.Header.Get("Authorization"))
 	if err != nil {
 		writeErr(w, err)
 		return
