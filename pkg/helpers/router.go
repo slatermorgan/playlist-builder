@@ -9,7 +9,7 @@ import (
 type handler interface {
 	GetAll(ctx context.Context) (Response, error)
 	Get(ctx context.Context, id string) (Response, error)
-	Create(ctx context.Context, body []byte) (Response, error)
+	Create(ctx context.Context, body []byte, token string) (Response, error)
 	Update(ctx context.Context, id string, body []byte) (Response, error)
 	Delete(ctx context.Context, id string) (Response, error)
 }
